@@ -1,11 +1,9 @@
 import React, {useState} from 'react';
-import {PostData} from "../../types";
+import type {PostData} from "../../types";
 
 interface PropsForm {
   onSubmit: (e: React.FormEvent<HTMLFormElement>, post: PostData) => void;
 }
-
-
 
 const FormMessage: React.FC<PropsForm> = ({onSubmit}) => {
 

@@ -1,44 +1,43 @@
 import React, {useState, useEffect} from 'react';
 import FormMessage from "../FormMessage/FormMessage";
-import {PostData, ResponseMessage} from "../../types";
+import type {PostData, ResponseMessage} from "../../types";
 import Message from "../Message/Message";
 
 
-const URL = 'http://146.185.154.90:8000/messages';
+const urlPost = 'http://146.185.154.90:8000/messages';
+let url = 'http://146.185.154.90:8000/messages';
+let interval: NodeJS.Timeout;
 
 const Chat = () => {
   const [messages, setMessages] = useState<ResponseMessage[]>([]);
-
+  const [checkInterval, setCheckInterval] = useState(false);
 
   useEffect(() => {
-    let url = 'http://146.185.154.90:8000/messages';
-    setInterval(() => {
+    interval = setInterval(() => {
       const fetchData = async (urlOne: string) => {
-
         const response = await fetch(urlOne);
         if (response.ok) {
           const responseMessages: ResponseMessage[] = await response.json();
           if (responseMessages.length > 0) {
             url = `http://146.185.154.90:8000/messages?datetime=${responseMessages[responseMessages.length - 1].datetime}`;
-            setMessages(responseMessages)
+            setMessages(prevState => ([...prevState, ...responseMessages]));
           }
         }
       };
-
       fetchData(url).catch(e => console.error(e))
-
-    }, 3000);
-  }, [])
+    }, 2000);
+  }, [checkInterval])
 
 
   const onFormSubmit = async (e: React.FormEvent, post: PostData) => {
     e.preventDefault();
+    clearInterval(interval);
     try {
       const data = new URLSearchParams();
       data.set('message', post.dataTextArea);
       data.set('author', post.dataInput);
 
-      const response = await fetch(URL, {
+      const response = await fetch(urlPost, {
         method: 'post',
         body: data,
       });
@@ -50,6 +49,8 @@ const Chat = () => {
     } catch (e) {
       console.error(e)
     }
+
+    setCheckInterval(prevState => !prevState);
   }
 
   return (
@@ -57,7 +58,6 @@ const Chat = () => {
       <FormMessage
         onSubmit={(e, post) => onFormSubmit(e, post)}
       />
-
       <div>
         {messages.map(message => (
           <Message key={message.datetime + Math.random()} data={message.datetime} author={message.author}
