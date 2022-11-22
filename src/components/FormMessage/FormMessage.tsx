@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
 import type {PostData} from "../../types";
+import {Button} from '@mui/material'
+import {Divider} from "@mui/material";
+import {Typography} from "@mui/material";
 
 interface PropsForm {
   onSubmit: (e: React.FormEvent<HTMLFormElement>, post: PostData) => void;
@@ -22,7 +25,17 @@ const FormMessage: React.FC<PropsForm> = ({onSubmit}) => {
 
   return (
     <>
-      <h5 className="text-center text-uppercase pt-3 text-info fs-4">Chat</h5>
+      <Divider
+        component="div"
+        role="presentation">
+        <Typography
+          className="text-uppercase text-info"
+          variant="h2"
+        >
+          Chat
+        </Typography>
+      </Divider>
+
       <form onSubmit={(e) => onSubmit(e, data)}>
         <div className="mb-3">
           <label className="form-label">Your name:</label>
@@ -43,12 +56,14 @@ const FormMessage: React.FC<PropsForm> = ({onSubmit}) => {
             onChange={textAreaChange}
           />
         </div>
-        <button
+
+        <Button
           type="submit"
-          className="btn btn-info mb-3"
+          variant="contained"
+          className="mb-4"
         >
           Send Message
-        </button>
+        </Button>
       </form>
     </>
   );

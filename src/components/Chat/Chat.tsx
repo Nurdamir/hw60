@@ -58,10 +58,14 @@ const Chat = () => {
       <FormMessage
         onSubmit={(e, post) => onFormSubmit(e, post)}
       />
+
       <div>
         {messages.map(message => (
-          <Message key={message.datetime + Math.random()} data={message.datetime} author={message.author}
-                   message={message.message}/>
+          <Message
+            key={message.datetime + Math.random()}
+            data={message.datetime}
+            author={message.author}
+            message={message.message}/>
         ))}
       </div>
     </div>
